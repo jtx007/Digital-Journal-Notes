@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import chinguRailsAPI from '../api/chinguBackendAPI'
+import JournalEntryCard from './JournalEntryCard'
 
 export default class JournalList extends Component {
 
@@ -7,6 +9,20 @@ export default class JournalList extends Component {
         entryTitle: '',
         entryBody: ''
     }
+
+
+async componentDidMount() {
+    const response = await chinguRailsAPI.get("entries")
+        this.setState({
+            journalEntries: response.data
+        })
+    }
+
+renderJournalCards = (entries) => {
+    return entries.map((entry) => {
+        return <JournalEntryCard key={entry.id}  entry={entry} />
+    })
+}
 
     handleTitleInputChange = (event) => {
         this.setState({
@@ -44,7 +60,10 @@ export default class JournalList extends Component {
                             </div>
                         <button className="ui primary button" type="submit">Submit</button>
                         </form>
-                        
+                                
+                        <div className="ui cards">
+                            {this.renderJournalCards(this.state.journalEntries)}
+                        </div>
                 </div>
             </div>
         )
