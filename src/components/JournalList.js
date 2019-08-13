@@ -86,7 +86,6 @@ renderJournalCards = (entries) => {
             
     } else {
         return entries.map((entry) => {
-            console.log(entry)
             return(
                 
                     <JournalEntryCard key={entry.id}  entry={entry} handleDeleteEntry={this.handleDeleteEntry} handleEditEntry={this.handleEditEntry} />
