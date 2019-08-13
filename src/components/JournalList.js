@@ -87,7 +87,7 @@ renderJournalCards = (entries) => {
         return entries.map((entry) => {
             return(
                 
-                    <JournalEntryCard key={entry.id}  entry={entry} />
+                    <JournalEntryCard key={entry.id}  entry={entry} handleDeleteEntry={this.handleDeleteEntry} />
 
                     ) 
                 
@@ -131,6 +131,20 @@ renderJournalCards = (entries) => {
     
         
         
+    }
+
+    filterEntriesToBeKept = (id, entries) => {
+        return entries.filter((entry) => {
+            if (entry.id !== id) {
+                return entry
+            }
+        })
+    }
+
+    handleDeleteEntry = (id) => {
+        this.setState((prevState) =>({
+            journalEntries: prevState.journalEntries.filter((entry) => entry.id !== id ? entry : null)
+        }))
     }
 
     render() {

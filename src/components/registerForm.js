@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-
-
+import chinguBackendAPI from '../api/chinguBackendAPI'
+import { connect } from 'react-redux';
+import { sign_in } from '../actions/index'
 
 class Registerform extends Component {
     state = {
@@ -20,8 +21,18 @@ class Registerform extends Component {
         })
     }
 
-    handleFormSubmit =  (event) => {
+    handleFormSubmit =  async (event) => {
         event.preventDefault()
+        await chinguBackendAPI.post("/users", 
+        {
+            "user": {"username": this.state.username, "password": this.state.password}
+        },
+        {headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }}
+        )
+        this.props.sign_in(this.state.username, this.state.password)
     }
 
     render() {
@@ -46,4 +57,4 @@ class Registerform extends Component {
     }
 }
 
-export default Registerform;
+export default connect(null, { sign_in })(Registerform);

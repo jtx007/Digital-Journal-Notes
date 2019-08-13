@@ -2,16 +2,20 @@ import React from 'react'
 import chinguRailsAPI from '../api/chinguBackendAPI'
 import { connect } from 'react-redux'
 
-const JournalEntryCard = ({ entry, token }) => {
+const JournalEntryCard = ({ entry, token, handleDeleteEntry }) => {
 
- const deleteEntry = async() => {
-        await chinguRailsAPI.delete(`entries/${entry.id}`, {
-            headers: {
-                "Authorization": token
-            }
-        })
-    }
 
+
+
+    const deleteEntry = async() => {
+            await chinguRailsAPI.delete(`entries/${entry.id}`, {
+                headers: {
+                    "Authorization": token
+                }
+            })
+            handleDeleteEntry(entry.id)
+        }
+        
     return (
         <div className="card">
             <div className="content">
