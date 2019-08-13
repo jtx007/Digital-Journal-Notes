@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import chinguBackendAPI from '../api/chinguBackendAPI'
 import { connect } from 'react-redux';
 import { sign_in } from '../actions/index'
+import { Redirect } from 'react-router-dom'
 
 class Registerform extends Component {
     state = {
@@ -36,25 +37,37 @@ class Registerform extends Component {
     }
 
     render() {
-        return (
-            <form onSubmit={this.handleFormSubmit} className="ui segement container form">
-                <h1 className="header">{this.props.formType}</h1>
-                <div className="field">
-                    <label>{this.props.label1}</label>
-                    <input
-                    onChange={this.handleUsernameChange}
-                    type="text"  value={this.state.username}/>
-                </div>
-                <div className="field">
-                    <label>{this.props.label2}</label>
-                    <input
-                    onChange={this.handlePasswordChange} 
-                    type="password"  value={this.state.password}/>
-                </div>
-            <button className="ui primary button" type="submit">Submit</button>
-            </form>
-        )
+        if (!this.props.isLoggedIn) {
+            return (
+                <form onSubmit={this.handleFormSubmit} className="ui segement container form">
+                    <h1 className="header">{this.props.formType}</h1>
+                    <div className="field">
+                        <label>{this.props.label1}</label>
+                        <input
+                        onChange={this.handleUsernameChange}
+                        type="text"  value={this.state.username}/>
+                    </div>
+                    <div className="field">
+                        <label>{this.props.label2}</label>
+                        <input
+                        onChange={this.handlePasswordChange} 
+                        type="password"  value={this.state.password}/>
+                    </div>
+                <button className="ui primary button" type="submit">Submit</button>
+                </form>
+            )
+        } else {
+            return <Redirect to="/" />
+        }
     }
 }
 
-export default connect(null, { sign_in })(Registerform);
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: state.auth.isLoggedIn,
+        token: state.auth.token,
+        user_id: state.auth.user_id
+    }
+}
+
+export default connect(mapStateToProps, { sign_in })(Registerform);

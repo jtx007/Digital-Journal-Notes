@@ -20,8 +20,7 @@ export const sign_in = (username, password) => async dispatch => {
     history.push("/")
 }
 
-export const sign_out = () => {
-    return {
-        type: SIGN_OUT
-    }
+export const sign_out = () => dispatch => {
+    dispatch({type: SIGN_OUT})
+    history.push("/")
 }

@@ -9,16 +9,17 @@ class JournalList extends Component {
     state = {
         journalEntries: [],
         entryTitle: '',
-        entryBody: ''
+        entryBody: '',
+        currentUser: ''
     }
 
 
 async componentDidMount() {
     if (this.props.isLoggedIn) {
         const response = await chinguRailsAPI.get(`/users/${this.props.user_id}`, {headers: {"Authorization": this.props.token}})
-        console.log(response.data)
         this.setState({
-            journalEntries: response.data.entries
+            journalEntries: response.data.entries,
+            currentUser: response.data.username
         })
     }
 
@@ -32,7 +33,7 @@ renderNewEntryForm = () => {
         return (
             <div className="ui container">
                         <InfoPanel
-                        header={"Enter New Entry"}
+                        header={`Welcome ${this.state.currentUser}`}
                         cardContent={"Record your thoughts here"}
                         />
                         <form onSubmit={this.handleSubmitNewEntry} className="ui container form">
@@ -87,7 +88,7 @@ renderJournalCards = (entries) => {
         return entries.map((entry) => {
             return(
                 
-                    <JournalEntryCard key={entry.id}  entry={entry} handleDeleteEntry={this.handleDeleteEntry} />
+                    <JournalEntryCard key={entry.id}  entry={entry} handleDeleteEntry={this.handleDeleteEntry} handleEditEntry={this.handleEditEntry} />
 
                     ) 
                 
@@ -133,17 +134,17 @@ renderJournalCards = (entries) => {
         
     }
 
-    filterEntriesToBeKept = (id, entries) => {
-        return entries.filter((entry) => {
-            if (entry.id !== id) {
-                return entry
-            }
-        })
-    }
+    
 
     handleDeleteEntry = (id) => {
         this.setState((prevState) =>({
             journalEntries: prevState.journalEntries.filter((entry) => entry.id !== id ? entry : null)
+        }))
+    }
+
+    handleEditEntry = (editedEntry) => {
+        this.setState((prevState) => ({
+            journalEntries: prevState.journalEntries.map((entry) => entry.id === editedEntry.id ? entry = editedEntry : null )
         }))
     }
 
