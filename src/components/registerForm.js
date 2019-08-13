@@ -32,8 +32,8 @@ class Registerform extends Component {
             "Content-Type": "application/json",
             "Accept": "application/json"
         }}
-        )
-        this.props.sign_in(this.state.username, this.state.password)
+        ).catch((error) => alert(error.response.data.errors[0]))
+        // this.props.sign_in(this.state.username, this.state.password)
     }
 
     render() {
