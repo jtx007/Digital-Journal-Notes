@@ -1,13 +1,13 @@
 import React from 'react'
 import chinguRailsAPI from '../api/chinguBackendAPI'
+import { connect } from 'react-redux'
 
-
-const JournalEntryCard = ({ entry }) => {
+const JournalEntryCard = ({ entry, token }) => {
 
  const deleteEntry = async() => {
         await chinguRailsAPI.delete(`entries/${entry.id}`, {
             headers: {
-                "Authorization": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1NjU0NzAzNTB9.gRyAKNB2bqgyVTiX0AOeCgesE91A_NU-IUUec7LU_94"
+                "Authorization": token
             }
         })
     }
@@ -26,4 +26,12 @@ const JournalEntryCard = ({ entry }) => {
     )
 }
 
-export default JournalEntryCard
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: state.auth.isLoggedIn,
+        token: state.auth.token,
+        user_id: state.auth.user_id
+    }
+}
+
+export default connect(mapStateToProps)(JournalEntryCard)

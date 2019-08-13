@@ -1,16 +1,33 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { sign_out } from '../actions/index'
 
+
+
 const Navbar = (props) => {
-    console.log(props)
+
+    const renderNavbar = () => {
+        if (props.isLoggedIn) {
+            return (
+                <Fragment>
+                    <Link className="item" to="/">Home</Link>
+                    <button onClick={props.sign_out} className="item ui red button">Sign Out</button>
+                </Fragment>
+            )
+        } else {
+            return (
+                <Fragment>
+                    <Link className="item" to="/">Home</Link>
+                    <Link className="item" to="/login">Login</Link>
+                    <Link className="item" to="/register">Sign Up</Link>
+                </Fragment>
+            )
+        }
+    }
     return (
         <nav className="ui three item menu">
-            <Link className="item" to="/">Home</Link>
-            <Link className="item" to="/login">Login</Link>
-            <Link className="item" to="/register">Sign Up</Link>
-            
+            {renderNavbar()}
         </nav>
     )
 }

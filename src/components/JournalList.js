@@ -1,8 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import chinguRailsAPI from '../api/chinguBackendAPI'
 import JournalEntryCard from './JournalEntryCard'
+import { connect } from 'react-redux';
+import InfoPanel from './InfoPanel'
 
-export default class JournalList extends Component {
+class JournalList extends Component {
 
     state = {
         journalEntries: [],
@@ -12,36 +14,28 @@ export default class JournalList extends Component {
 
 
 async componentDidMount() {
-    const response = await chinguRailsAPI.get("entries")
+    if (this.props.isLoggedIn) {
+        const response = await chinguRailsAPI.get(`/users/${this.props.user_id}`, {headers: {"Authorization": this.props.token}})
+        console.log(response.data)
         this.setState({
-            journalEntries: response.data
+            journalEntries: response.data.entries
         })
     }
 
-renderJournalCards = (entries) => {
-    return entries.map((entry) => {
-        return <JournalEntryCard key={entry.id}  entry={entry} />
-    })
+
 }
 
-    handleTitleInputChange = (event) => {
-        this.setState({
-            entryTitle: event.target.value
-        })
-    }
 
-    handleBodyTextAreaChange = (event) => {
-        this.setState({
-            entryBody: event.target.value
-        })
-    }
 
-    render() {
+renderNewEntryForm = () => {
+    if (this.props.isLoggedIn) {
         return (
-            <div>
-                <div className="ui container">
-                    <h1 className="header">Chingu Journal</h1>
-                        <form className="ui container form">
+            <div className="ui container">
+                        <InfoPanel
+                        header={"Enter New Entry"}
+                        cardContent={"Record your thoughts here"}
+                        />
+                        <form onSubmit={this.handleSubmitNewEntry} className="ui container form">
                             <div className="field">
                                 <label>Entry Title</label>
                                 <input 
@@ -65,7 +59,98 @@ renderJournalCards = (entries) => {
                             {this.renderJournalCards(this.state.journalEntries)}
                         </div>
                 </div>
+        )
+    } else {
+        return(
+            <InfoPanel 
+            header={"Welcome to Chingu Journal"} 
+            cardHeader={"What It's All About"} 
+            cardContent={"Welcome to Chingu Journal, a place where you can log your innermost thoughts and some of your daily happenings. It's private and unique to you and you only. Edit and Delete your entries at will. Log in or sign up to get started."} 
+            />
+        ) 
+    }
+}
+
+renderJournalCards = (entries) => {
+    
+    if (entries.length === 0) {
+        return (
+                <Fragment>
+                    <br />
+                    <br />
+                    <br />
+                    <h1>Your Journal is Empty</h1>
+                </Fragment>
+            ) 
+            
+    } else {
+        return entries.map((entry) => {
+            return(
+                
+                    <JournalEntryCard key={entry.id}  entry={entry} />
+
+                    ) 
+                
+                
+    })
+    }
+}
+
+    handleTitleInputChange = (event) => {
+        this.setState({
+            entryTitle: event.target.value
+        })
+    }
+
+    handleBodyTextAreaChange = (event) => {
+        this.setState({
+            entryBody: event.target.value
+        })
+    }
+
+    handleSubmitNewEntry = async (event) =>  {
+        event.preventDefault()
+        const response = await chinguRailsAPI.post(
+        "/entries", 
+        {
+            "entry": {"title": this.state.entryTitle, "body": this.state.entryBody, "user_id": this.props.user_id}
+        },
+        {headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": this.props.token
+        }}
+
+        )
+        this.setState(prevState => ({
+            
+            entryTitle: '',
+            entryBody: '',
+            journalEntries: [...prevState.journalEntries, response.data]
+        }))
+    
+        
+        
+    }
+
+    render() {
+
+
+        return (
+            <div>
+                {this.renderNewEntryForm()}
             </div>
         )
     }
 }
+
+
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: state.auth.isLoggedIn,
+        token: state.auth.token,
+        user_id: state.auth.user_id
+    }
+}
+
+export default connect(mapStateToProps)(JournalList)

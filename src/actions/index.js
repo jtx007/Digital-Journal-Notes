@@ -17,6 +17,7 @@ export const sign_in = (username, password) => async dispatch => {
         })
 
     dispatch({type: SIGN_IN, payload: response.data})
+    history.push("/")
 }
 
 export const sign_out = () => {
