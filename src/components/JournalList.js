@@ -86,6 +86,7 @@ renderJournalCards = (entries) => {
             
     } else {
         return entries.map((entry) => {
+            console.log(entry)
             return(
                 
                     <JournalEntryCard key={entry.id}  entry={entry} handleDeleteEntry={this.handleDeleteEntry} handleEditEntry={this.handleEditEntry} />
@@ -144,7 +145,7 @@ renderJournalCards = (entries) => {
 
     handleEditEntry = (editedEntry) => {
         this.setState((prevState) => ({
-            journalEntries: prevState.journalEntries.map((entry) => entry.id === editedEntry.id ? entry = editedEntry : null )
+            journalEntries: prevState.journalEntries.map((entry) => entry.id === editedEntry.id ? entry = editedEntry : entry )
         }))
     }
 
