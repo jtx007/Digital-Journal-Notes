@@ -33,7 +33,7 @@ class Registerform extends Component {
             "Accept": "application/json"
         }}
         ).catch((error) => alert(error.response.data.errors[0]))
-        // this.props.sign_in(this.state.username, this.state.password)
+        this.props.sign_in(this.state.username, this.state.password)
     }
 
     render() {

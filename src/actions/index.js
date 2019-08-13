@@ -22,5 +22,5 @@ export const sign_in = (username, password) => async dispatch => {
 
 export const sign_out = () => dispatch => {
     dispatch({type: SIGN_OUT})
-    history.push("/")
+    history.replace("/")
 }
