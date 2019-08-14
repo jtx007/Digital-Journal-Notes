@@ -25,6 +25,7 @@ const Navbar = (props) => {
             )
         }
     }
+
     return (
         <nav className="ui three item menu">
             {renderNavbar()}

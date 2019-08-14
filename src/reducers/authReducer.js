@@ -16,7 +16,7 @@ export default(state = INITIAL_STATE, action) => {
             return {...state, isLoggedIn: true, token: action.payload.token , user_id: action.payload.user_id }
         case SIGN_OUT:
             localStorage.clear()
-            return INITIAL_STATE
+            return {...state, isLoggedIn: false, token: null, user_id: null}
         default:
             return state;
     }
