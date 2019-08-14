@@ -32,6 +32,8 @@ renderNewEntryForm = () => {
     if (this.props.isLoggedIn) {
         return (
             <div className="ui container">
+                <div className="ui hidden divider"></div>
+
                         <InfoPanel
                         header={`Welcome ${this.state.currentUser}`}
                         cardContent={"Record your thoughts here"}
@@ -55,8 +57,9 @@ renderNewEntryForm = () => {
                             </div>
                         <button className="ui primary button" type="submit">Submit</button>
                         </form>
-                                
-                        <div className="ui cards">
+                        <div className="ui hidden divider"></div>
+        
+                        <div className="ui  cards">
                             {this.renderJournalCards(this.state.journalEntries)}
                         </div>
                 </div>

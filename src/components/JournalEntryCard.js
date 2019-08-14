@@ -12,8 +12,10 @@ const JournalEntryCard = ({ entry, token, handleDeleteEntry, handleEditEntry, us
         if (editFormShow) {
             return (
                 <div className="card">
-                    <h4 className="header">Edit Entry</h4>
-                    <form onSubmit={editEntry} className="ui form container segment">
+                    <div className="content">
+                        <h4 className="ui header">Edit Entry</h4>
+                    </div>
+                    <form onSubmit={editEntry} className="ui form container content">
                         <div className="field">
                             <label>Edit Title</label>
                             <input onChange={(event) => changeEntryTitle(event.target.value)} type="text" value={editedEntryTitle} />
