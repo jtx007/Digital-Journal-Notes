@@ -12,13 +12,13 @@ class LoginForm extends Component {
 
     handleUsernameChange = (e) => {
         this.setState({
-            username: e.target.value
+            username: e.target.value.trim()
         })
     }
 
     handlePasswordChange = (e) => {
         this.setState({
-            password: e.target.value
+            password: e.target.value.trim()
         })
     }
 
