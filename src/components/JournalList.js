@@ -96,6 +96,8 @@ renderJournalCards = (entries) => {
                     ) 
                 
                 
+    }).sort((entryA, entryB) => {
+        return entryB.key - entryA.key
     })
     }
 }
