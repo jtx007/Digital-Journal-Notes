@@ -35,7 +35,7 @@ renderNewEntryForm = () => {
                 <div className="ui hidden divider"></div>
 
                         <InfoPanel
-                        header={`Welcome ${this.state.currentUser}`}
+                        header={`Welcome ${this.state.currentUser}  |  Create A Note`}
                         cardContent={"Record your thoughts here"}
                         />
                         <form onSubmit={this.handleSubmitNewEntry} className="ui container form">
