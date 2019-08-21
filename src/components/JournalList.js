@@ -67,9 +67,9 @@ renderNewEntryForm = () => {
     } else {
         return(
             <InfoPanel 
-            header={"Welcome to Chingu Journal"} 
+            header={"Digital Journal"} 
             cardHeader={"What It's All About"} 
-            cardContent={"Welcome to Chingu Journal, a place where you can log your innermost thoughts and some of your daily happenings. It's private and unique to you and you only. Edit and Delete your entries at will. Log in or sign up to get started."} 
+            cardContent={"Welcome to your Digital Journal, a place where you can log your innermost thoughts and some of your daily happenings. It's private and unique to you and you only. Edit and Delete your entries at will. Log in or sign up to get started."} 
             />
         ) 
     }
