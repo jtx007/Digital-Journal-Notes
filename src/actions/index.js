@@ -1,10 +1,10 @@
 import history from '../history';
 import { SIGN_IN, SIGN_OUT } from './types'
-import chinguLogin from '../api/chinguLogin'
+import digitalJournalLogin from '../api/digitalJournalLogin'
 
 export const sign_in = (username, password) => async dispatch => {
     
-    const response = await chinguLogin.post(
+    const response = await digitalJournalLogin.post(
         "/login", 
         {
             "username": username, "password": password

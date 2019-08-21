@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import chinguBackendAPI from '../api/chinguBackendAPI'
+import digitalJournalAPI from '../api/digitalJournalAPI'
 import { connect } from 'react-redux';
 import { sign_in } from '../actions/index'
 import { Redirect } from 'react-router-dom'
@@ -24,7 +24,7 @@ class Registerform extends Component {
 
     handleFormSubmit =  async (event) => {
         event.preventDefault()
-        await chinguBackendAPI.post("/users", 
+        await digitalJournalAPI.post("/users", 
         {
             "user": {"username": this.state.username, "password": this.state.password}
         },

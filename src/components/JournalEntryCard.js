@@ -1,5 +1,5 @@
 import React, {useState, Fragment } from 'react'
-import chinguRailsAPI from '../api/chinguBackendAPI'
+import digitalJournalAPI from '../api/digitalJournalAPI'
 import { connect } from 'react-redux'
 
 const JournalEntryCard = ({ entry, token, handleDeleteEntry, handleEditEntry, user_id }) => {
@@ -49,7 +49,7 @@ const JournalEntryCard = ({ entry, token, handleDeleteEntry, handleEditEntry, us
 
     const editEntry = async(event) => {
         event.preventDefault()
-        const response = await chinguRailsAPI.patch(`entries/${entry.id}`, 
+        const response = await digitalJournalAPI.patch(`entries/${entry.id}`, 
         {
             "entry": {"title": editedEntryTitle, "body": editedEntryBody, "user_id": user_id}
         },
@@ -65,7 +65,7 @@ const JournalEntryCard = ({ entry, token, handleDeleteEntry, handleEditEntry, us
     }
 
     const deleteEntry = async() => {
-            await chinguRailsAPI.delete(`entries/${entry.id}`, {
+            await digitalJournalAPI.delete(`entries/${entry.id}`, {
                 headers: {
                     "Authorization": token
                 }

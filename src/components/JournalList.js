@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import chinguRailsAPI from '../api/chinguBackendAPI'
+import digitalJournalAPI from '../api/digitalJournalAPI'
 import JournalEntryCard from './JournalEntryCard'
 import { connect } from 'react-redux';
 import InfoPanel from './InfoPanel'
@@ -16,7 +16,7 @@ class JournalList extends Component {
 
 async componentDidMount() {
     if (this.props.isLoggedIn) {
-        const response = await chinguRailsAPI.get(`/users/${this.props.user_id}`, {headers: {"Authorization": this.props.token}})
+        const response = await digitalJournalAPI.get(`/users/${this.props.user_id}`, {headers: {"Authorization": this.props.token}})
         this.setState({
             journalEntries: response.data.entries,
             currentUser: response.data.username
@@ -116,7 +116,7 @@ renderJournalCards = (entries) => {
 
     handleSubmitNewEntry = async (event) =>  {
         event.preventDefault()
-        const response = await chinguRailsAPI.post(
+        const response = await digitalJournalAPI.post(
         "/entries", 
         {
             "entry": {"title": this.state.entryTitle, "body": this.state.entryBody, "user_id": this.props.user_id}
