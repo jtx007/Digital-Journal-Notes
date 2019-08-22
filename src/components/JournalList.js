@@ -15,6 +15,7 @@ class JournalList extends Component {
 
 
 async componentDidMount() {
+    await digitalJournalAPI.get("/users/ping")
     if (this.props.isLoggedIn) {
         const response = await digitalJournalAPI.get(`/users/${this.props.user_id}`, {headers: {"Authorization": this.props.token}})
         this.setState({
