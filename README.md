@@ -2,7 +2,7 @@
 
 ## Deployed here: [Digital-Journal-Notes](https://digital-journal-notes.herokuapp.com/)
 
-![digitalNotesScreenShot](../public/digitalNotesScreenCap.png)
+![digitalNotesScreenShot](public/digitalNotesScreenCap.png)
 
 
 #### A full stack CRUD web application for creating private journal entries where you can create, edit, and delete entries in real time.
