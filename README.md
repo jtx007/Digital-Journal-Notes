@@ -9,8 +9,7 @@
 #### It was built with the following:
 #### Frontend:
 - React.js
-- Redux
-- Redux-Thunk
+- Context
 - Semantic-UI
 
 #### Backend([link to backend Repo](https://github.com/jtx007/Digital-Journal-Notes-API)):
