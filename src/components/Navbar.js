@@ -1,18 +1,24 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { connect } from 'react-redux';
-import { sign_out } from '../actions/index'
+import { LoginContext } from '../auth/loginContext'
 
 
 
-const Navbar = (props) => {
+const Navbar = ({ isLoggedIn, setToken, setIsLoggedIn, setUserId }) => {
+
+    const signOut = () => {
+        localStorage.clear()
+        setToken("")
+        setUserId("")
+        setIsLoggedIn("")
+    }
 
     const renderNavbar = () => {
-        if (props.isLoggedIn) {
+        if (isLoggedIn) {
             return (
                 <Fragment>
                     <Link className="item" to="/">Home</Link>
-                    <button onClick={props.sign_out} className="item ui red button">Sign Out</button>
+                    <button onClick={signOut} className="item ui red button">Sign Out</button>
                 </Fragment>
             )
         } else {
@@ -33,12 +39,15 @@ const Navbar = (props) => {
     )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        isLoggedIn: state.auth.isLoggedIn,
-        token: state.auth.token,
-        user_id: state.auth.user_id
-    }
+const NavbarWithContext = () => {
+    return (
+        <LoginContext.Consumer>
+            {value => {
+                return <Navbar {...value} />
+            }}
+        </LoginContext.Consumer>
+    )
 }
 
-export default connect(mapStateToProps, { sign_out })(Navbar)
+
+export default NavbarWithContext;

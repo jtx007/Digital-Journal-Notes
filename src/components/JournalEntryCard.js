@@ -1,6 +1,6 @@
-import React, {useState, Fragment } from 'react'
+import React, {useState } from 'react'
 import digitalJournalAPI from '../api/digitalJournalAPI'
-import { connect } from 'react-redux'
+import { LoginContext } from '../auth/loginContext'
 
 const JournalEntryCard = ({ entry, token, handleDeleteEntry, handleEditEntry, user_id }) => {
 
@@ -18,11 +18,11 @@ const JournalEntryCard = ({ entry, token, handleDeleteEntry, handleEditEntry, us
                     <form onSubmit={editEntry} className="ui form container content">
                         <div className="field">
                             <label>Edit Title</label>
-                            <input onChange={(event) => changeEntryTitle(event.target.value)} type="text" value={editedEntryTitle} />
+                            <input required onChange={(event) => changeEntryTitle(event.target.value)} type="text" value={editedEntryTitle} />
                         </div>
                         <div className="field">
                             <label>Edit Body</label>
-                            <textarea onChange={(event) => changeEntryBody(event.target.value)} type="text" value={editedEntryBody} />
+                            <textarea required onChange={(event) => changeEntryBody(event.target.value)} type="text" value={editedEntryBody} />
                         </div>
                         <div className="extra content">
                             <button type="submit" className="ui primary button">Save</button>
@@ -49,44 +49,56 @@ const JournalEntryCard = ({ entry, token, handleDeleteEntry, handleEditEntry, us
 
     const editEntry = async(event) => {
         event.preventDefault()
-        const response = await digitalJournalAPI.patch(`entries/${entry.id}`, 
-        {
-            "entry": {"title": editedEntryTitle, "body": editedEntryBody, "user_id": user_id}
-        },
-        {
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": token
-            }
-        })
-        handleEditEntry(response.data)
-        toggleEditForm(false)
+        try {
+            const response = await digitalJournalAPI.patch(`entries/${entry.id}`, 
+            {
+                "entry": {"title": editedEntryTitle, "body": editedEntryBody, "user_id": user_id}
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": token
+                }
+            })
+            handleEditEntry(response.data)
+            toggleEditForm(false)
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const deleteEntry = async() => {
+        try {
             await digitalJournalAPI.delete(`entries/${entry.id}`, {
                 headers: {
                     "Authorization": token
                 }
             })
             handleDeleteEntry(entry.id)
-        }
-    return (
-            <Fragment>
-                {renderForm()}
 
-            </Fragment>
-    
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    return (
+            <>
+            {renderForm()}
+            </>
     )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        isLoggedIn: state.auth.isLoggedIn,
-        token: state.auth.token,
-        user_id: state.auth.user_id
-    }
+const JournalEntryCardWithContext = (props) => {
+    return (
+        <LoginContext.Consumer>
+            {value => {
+                return <JournalEntryCard {...value} {...props} />
+            }}
+        </LoginContext.Consumer>
+    )
 }
 
-export default connect(mapStateToProps)(JournalEntryCard)
+export default JournalEntryCardWithContext

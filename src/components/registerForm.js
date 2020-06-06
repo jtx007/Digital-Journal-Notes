@@ -1,73 +1,124 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import digitalJournalAPI from '../api/digitalJournalAPI'
-import { connect } from 'react-redux';
-import { sign_in } from '../actions/index'
+import digitalJournalLogin from '../api/digitalJournalLogin'
+import { LoginContext } from '../auth/loginContext'
 import { Redirect } from 'react-router-dom'
 
-class Registerform extends Component {
-    state = {
-        username: '',
-        password: ''
-    }
 
-    handleUsernameChange = (e) => {
-        this.setState({
-            username: e.target.value.trim()
-        })
-    }
+const Registerform = ({
+  isLoggedIn,
+  formType,
+  label1,
+  label2,
+  setIsLoggedIn,
+  setUserId,
+  setToken
+}) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-    handlePasswordChange = (e) => {
-        this.setState({
-            password: e.target.value.trim()
-        })
-    }
 
-    handleFormSubmit =  async (event) => {
-        event.preventDefault()
-        await digitalJournalAPI.post("/users", 
+useEffect(() => {
+    
+},[])
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    try {
+        await digitalJournalAPI
+          .post(
+            "/users",
+            {
+              user: { "username": username, "password": password },
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+              },
+            }
+          )
+         const response = await digitalJournalLogin.post("/login", 
+            {"username": username, "password": password}
+        ,
         {
-            "user": {"username": this.state.username, "password": this.state.password}
-        },
-        {headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        }}
-        ).catch((error) => alert(error.response.data.errors[0]))
-        this.props.sign_in(this.state.username, this.state.password)
-    }
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+        
+        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('user_id', response.data.user_id)
+        localStorage.setItem('isLoggedIn', true)
+        setToken(response.data.token)
+        setUserId(response.data.user_id)
+        setIsLoggedIn(true)
 
-    render() {
-        if (!this.props.isLoggedIn) {
-            return (
-                <form onSubmit={this.handleFormSubmit} className="ui segement container form">
-                    <h1 className="header">{this.props.formType}</h1>
-                    <div className="field">
-                        <label>{this.props.label1}</label>
-                        <input
-                        onChange={this.handleUsernameChange}
-                        type="text"  value={this.state.username}/>
-                    </div>
-                    <div className="field">
-                        <label>{this.props.label2}</label>
-                        <input
-                        onChange={this.handlePasswordChange} 
-                        type="password"  value={this.state.password}/>
-                    </div>
-                <button className="ui primary button" type="submit">Submit</button>
-                </form>
-            )
-        } else {
-            return <Redirect to="/" />
-        }
+        
+    } catch (error) {
+        console.log(error.response.data.errors[0])
     }
+        
+    setUsername('')
+    setPassword('') 
+  };
+
+  const renderFormOrRedirect = () => {
+    if (!isLoggedIn) {
+      return (
+          <>
+        <form
+          onSubmit={handleFormSubmit}
+          className="ui segement container form"
+        >
+          <h1 className="header">{formType}</h1>
+          <div className="field">
+            <label>{label1}</label>
+            <input
+              onChange={(e) => setUsername(e.target.value)}
+              type="text"
+              value={username}
+            />
+          </div>
+          <div className="field">
+            <label>{label2}</label>
+            <input
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              value={password}
+            />
+          </div>
+          <button className="ui primary button" type="submit">
+            Submit
+          </button>
+        </form>
+        </>
+      );
+    } else {
+      return <Redirect to="/" />;
+    }
+  };
+
+  return (
+    <>
+      {renderFormOrRedirect()}
+    </>
+  );
+};
+
+const RegisterFormWithContext = (props) => {
+    return (
+        <LoginContext.Consumer>
+            {value => {
+                return <Registerform {...props} {...value}/>
+            }}
+            
+        </LoginContext.Consumer>
+    
+    )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        isLoggedIn: state.auth.isLoggedIn,
-        token: state.auth.token,
-        user_id: state.auth.user_id
-    }
-}
 
-export default connect(mapStateToProps, { sign_in })(Registerform);
+
+export default RegisterFormWithContext;
